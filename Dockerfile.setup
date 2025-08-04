@@ -6,6 +6,12 @@ COPY services/apex_ords/jetty-compression.xml /apex_ords_config/
 COPY services/apex_ords/settings.xml /apex_ords_config/
 COPY services/apex_ords/pool.xml /apex_ords_config/
 
+#  Ajusta permissões dos arquivos copiados
+RUN chmod 644 /nginx_config/* && \
+    chmod 644 /apex_ords_config/jetty-compression.xml && \
+    chmod 644 /apex_ords_config/settings.xml && \
+    chmod 644 /apex_ords_config/pool.xml
+    
 # Verificar se os arquivos existem
 RUN ls -la /nginx_config/ && \
     ls -la /apex_ords_config/
