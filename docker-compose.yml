@@ -20,7 +20,6 @@ services:
     volumes:
       - nginx_secrets:/etc/letsencrypt
       - nginx_cache:/var/lib/nginx/cache
-      - nginx_certbot_webroot:/var/www/certbot
     depends_on:
       - cloudflare_tunnel-dev
     environment:
@@ -103,7 +102,6 @@ volumes:
   nginx_secrets:
   nginx_cache:
   nginx_config:
-  nginx_certbot_webroot:
   # apex_ords_config:
 
 networks:
