@@ -3,7 +3,6 @@ FROM container-registry.oracle.com/database/ords:23.4.0
 ARG APEX_DB_PASS
 ARG APEX_DB_SERVICE
 
-# Copiar arquivos de configuração diretamente no container
 COPY jetty-compression.xml /etc/ords/config/global/jetty-compression.xml
 COPY settings.xml /etc/ords/config/global/settings.xml
 COPY pool.xml /etc/ords/config/global/pool.xml
