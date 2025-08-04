@@ -23,7 +23,7 @@ services:
      - 443:443
      - 80:80
     volumes:
-      - ./custom.conf:/etc/nginx/user_conf.d/custom.conf
+      - custom.conf:/etc/nginx/user_conf.d/custom.conf
       - nginx_secrets:/etc/letsencrypt
       - nginx_cache:/var/lib/nginx/cache
     networks:
@@ -64,9 +64,9 @@ services:
     ports:
      - 8181:8181
     volumes:
-      - ./jetty-compression.xml:/etc/ords/config/global/jetty-compression.xml
-      - ./settings.xml:/etc/ords/config/global/settings.xml
-      - ./pool.xml:/etc/ords/config/databases/default/pool.xml
+      - jetty-compression.xml:/etc/ords/config/global/jetty-compression.xml
+      - settings.xml:/etc/ords/config/global/settings.xml
+      - pool.xml:/etc/ords/config/databases/default/pool.xml
       - ords_etc:/etc/ords/config
       - ords_variables:/opt/oracle/variables
     networks:
