@@ -23,7 +23,7 @@ services:
      - 443:443
      - 80:80
     volumes:
-      - /data/compose/1/services/nginx:/etc/nginx/user_conf.d:ro
+      - ./services/nginx:/etc/nginx/user_conf.d:ro
       - nginx_secrets:/etc/letsencrypt
       - nginx_cache:/var/lib/nginx/cache
     networks:
@@ -64,9 +64,9 @@ services:
     ports:
      - 8181:8181
     volumes:
-      # - /data/compose/1/services/apex_ords/jetty-compression.xml:/etc/ords/config/global/jetty-compression.xml
-      # - /data/compose/1/services/apex_ords/settings.xml:/etc/ords/config/global/settings.xml
-      # - /data/compose/1/services/apex_ords/pool.xml:/etc/ords/config/databases/default/pool.xml
+      - ./services/apex_ords/jetty-compression.xml:/etc/ords/config/global/jetty-compression.xml
+      - ./services/apex_ords/settings.xml:/etc/ords/config/global/settings.xml
+      - ./services/apex_ords/pool.xml:/etc/ords/config/databases/default/pool.xml
       - ords_etc:/etc/ords/config
       - ords_variables:/opt/oracle/variables
     networks:
