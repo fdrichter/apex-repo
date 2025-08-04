@@ -1,23 +1,4 @@
 services:
-  # cloudflare_tunnel:
-  #   image: cloudflare/cloudflared:latest
-  #   container_name: cloudflare_tunnel
-  #   restart: unless-stopped
-  #   command: tunnel --no-autoupdate run --token ${CLOUDFLARED_TOKEN}
-  #   networks:
-  #     - apex-network
-
-  setup_volumes:
-    build:
-      context: .
-      dockerfile: Dockerfile.setup
-    container_name: setup_volumes
-    volumes:
-      - nginx_config:/nginx_config
-      - apex_ords_config:/apex_ords_config
-    networks:
-      - apex-network
-
   cloudflare_tunnel-dev:
     image: cloudflare/cloudflared:latest
     container_name: cloudflare_tunnel
@@ -27,77 +8,70 @@ services:
       - apex-network
 
   nginx:
-    image: jonasal/nginx-certbot:latest
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile
+    # image: jonasal/nginx-certbot:latest
     container_name: nginx
     restart: unless-stopped
+    env_file:
+      - .env
     ports:
      - 443:443
      - 80:80
     volumes:
-      - nginx_config:/etc/nginx/user_conf.d
       - nginx_secrets:/etc/letsencrypt
       - nginx_cache:/var/lib/nginx/cache
-    networks:
-      - apex-network
     depends_on:
-      setup_volumes:
-        condition: service_completed_successfully
-
-  apex_db:
-    image: container-registry.oracle.com/database/express:21.3.0-xe
-    container_name: apex_db
-    restart: unless-stopped
-    environment:
-      - ORACLE_PWD=$APEX_DB_PASS
-      - ORACLE_CHARACTERSET=AL32UTF8
-    ports:
-     - 1521:1521
-    volumes:
-      - apex_data:/opt/oracle/oradata
+      - cloudflare_tunnel-dev
     networks:
       - apex-network
-    healthcheck:
-      test: ["CMD-SHELL", "sqlplus -s sys/$APEX_DB_PASS@apex_db:1521/XEPDB1 <<< 'SELECT 1 FROM DUAL;'"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
 
-  apex_ords:
-    build:
-      context: ./services/apex_ords
-      dockerfile: Dockerfile
-      args:
-        APEX_DB_PASS: ${APEX_DB_PASS}
-        APEX_DB_SERVICE: apex_db
-    # image: ${APP_NAME}_apex_ords:latest
-    container_name: apex_ords
-    restart: unless-stopped
-    environment:
-      - _JAVA_OPTIONS=-Xms256M -Xmx512M
-      # - IGNORE_APEX=TRUE
-    command: >
-      sh -c "
-        cp /apex_ords_files/jetty-compression.xml /etc/ords/config/global/jetty-compression.xml
-        cp /apex_ords_files/settings.xml /etc/ords/config/global/settings.xml
-        cp /apex_ords_files/pool.xml /etc/ords/config/databases/default/pool.xml
-        exec /opt/oracle/runOrds.sh
-      "
-    ports:
-     - 8181:8181
-    volumes:
-      - type: volume
-        source: apex_ords_config
-        target: /apex_ords_files
-        read_only: true
-      - ords_etc:/etc/ords/config
-      - ords_variables:/opt/oracle/variables
-    networks:
-      - apex-network
-    depends_on:
-      setup_volumes:
-        condition: service_completed_successfully
-      apex_db:
-        condition: service_healthy
+  # apex_db:
+  #   image: container-registry.oracle.com/database/express:21.3.0-xe
+  #   container_name: apex_db
+  #   restart: unless-stopped
+  #   environment:
+  #     - ORACLE_PWD=$APEX_DB_PASS
+  #     - ORACLE_CHARACTERSET=AL32UTF8
+  #   ports:
+  #    - 1521:1521
+  #   volumes:
+  #     - apex_data:/opt/oracle/oradata
+  #   networks:
+  #     - apex-network
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "sqlplus -s sys/$APEX_DB_PASS@apex_db:1521/XEPDB1 <<< 'SELECT 1 FROM DUAL;'"]
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 5
+
+  # apex_ords:
+  #   build:
+  #     context: ./services/apex_ords
+  #     dockerfile: Dockerfile
+  #     args:
+  #       APEX_DB_PASS: ${APEX_DB_PASS}
+  #       APEX_DB_SERVICE: apex_db
+  #   # image: ${APP_NAME}_apex_ords:latest
+  #   container_name: apex_ords
+  #   restart: unless-stopped
+  #   environment:
+  #     - _JAVA_OPTIONS=-Xms256M -Xmx512M
+  #     # - IGNORE_APEX=TRUE
+  #   ports:
+  #    - 8181:8181
+  #   volumes:
+  #     - type: volume
+  #       source: apex_ords_config
+  #       target: /apex_ords_files
+  #       read_only: true
+  #     - ords_etc:/etc/ords/config
+  #     - ords_variables:/opt/oracle/variables
+  #   networks:
+  #     - apex-network
+  #     apex_db:
+  #       condition: service_healthy
 
   # duplicati:
   #   image: linuxserver/duplicati:version-v2.0.8.1-2.0.8.1_beta_2024-05-07
@@ -117,13 +91,13 @@ services:
   #     - apex-network
 
 volumes:
-  apex_data:
-  ords_etc:
-  ords_variables:
+  # apex_data:
+  # ords_etc:
+  # ords_variables:
   nginx_secrets:
   nginx_cache:
   nginx_config:
-  apex_ords_config:
+  # apex_ords_config:
 
 networks:
   apex-network:
