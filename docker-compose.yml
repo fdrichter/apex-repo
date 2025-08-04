@@ -11,7 +11,6 @@ services:
     build:
       context: ./services/nginx
       dockerfile: Dockerfile
-    # image: jonasal/nginx-certbot:latest
     container_name: nginx
     restart: unless-stopped
     ports:
@@ -58,7 +57,6 @@ services:
       args:
         APEX_DB_PASS: ${APEX_DB_PASS}
         APEX_DB_SERVICE: apex_db
-    # image: ${APP_NAME}_apex_ords:latest
     container_name: apex_ords
     restart: unless-stopped
     environment:
