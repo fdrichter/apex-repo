@@ -1,0 +1,18 @@
+FROM alpine:latest
+
+# Copiar os arquivos de configuração
+COPY services/nginx/ /nginx_config/
+COPY services/apex_ords/jetty-compression.xml /apex_ords_config/
+COPY services/apex_ords/settings.xml /apex_ords_config/
+COPY services/apex_ords/pool.xml /apex_ords_config/
+
+# Verificar se os arquivos existem
+RUN ls -la /nginx_config/ && \
+    ls -la /apex_ords_config/
+
+# Criar diretórios para volumes
+VOLUME /nginx_config
+VOLUME /apex_ords_config
+
+# Manter o contêiner rodando apenas tempo suficiente para copiar os arquivos
+CMD ["sh", "-c", "echo 'Configurações copiadas para os volumes'; sleep 5"]
