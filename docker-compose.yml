@@ -67,8 +67,6 @@ services:
     ports:
      - 8181:8181
     volumes:
-      - ./services/apex_ords/jetty-compression.xml:/etc/ords/config/global/jetty-compression.xml
-      - ./services/apex_ords/settings.xml:/etc/ords/config/global/settings.xml
       - ords_etc:/etc/ords/config
       - ords_variables:/opt/oracle/variables
     networks:
