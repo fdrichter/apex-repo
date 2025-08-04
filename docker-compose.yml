@@ -14,8 +14,6 @@ services:
     # image: jonasal/nginx-certbot:latest
     container_name: nginx
     restart: unless-stopped
-    env_file:
-      - .env
     ports:
      - 443:443
      - 80:80
