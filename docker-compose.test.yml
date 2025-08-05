@@ -57,7 +57,7 @@ services:
       args:
         APEX_DB_PASS: ${APEX_DB_PASS}
         APEX_DB_SERVICE: 54.207.23.216
-    container_name: apex_ords
+    # container_name: apex_ords
     restart: unless-stopped
     environment:
       - _JAVA_OPTIONS=-Xms256M -Xmx512M
