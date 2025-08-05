@@ -1,0 +1,12 @@
+FROM container-registry.oracle.com/database/ords:21.4.2
+
+ARG APEX_DB_PASS
+ARG APEX_DB_SERVICE
+
+COPY jetty-compression.xml /etc/ords/config/global/jetty-compression.xml
+COPY settings.xml /etc/ords/config/global/settings.xml
+COPY pool.xml /etc/ords/config/global/pool.xml
+
+RUN mkdir -p /opt/oracle/variables \
+    && echo "CONN_STRING=EASY/${APEX_DB_PASS}@${APEX_DB_SERVICE}:1521/easyhml" > /opt/oracle/variables/conn_string.txt \
+    && chmod 777 /opt/oracle/variables/conn_string.txt
