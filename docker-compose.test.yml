@@ -69,9 +69,9 @@ services:
       - ords_variables:/opt/oracle/variables
     networks:
       - private_network
-    depends_on:
-      apex_db:
-        condition: service_healthy
+    # depends_on:
+    #   apex_db:
+    #     condition: service_healthy
 
   # duplicati:
   #   image: linuxserver/duplicati:version-v2.0.8.1-2.0.8.1_beta_2024-05-07
