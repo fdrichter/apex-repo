@@ -1,4 +1,4 @@
-FROM container-registry.oracle.com/database/ords:21.4.2
+FROM container-registry.oracle.com/database/ords:24.2.2
 
 ARG APEX_DB_PASS
 ARG APEX_DB_SERVICE
